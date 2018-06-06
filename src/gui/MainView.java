@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -132,10 +133,10 @@ public class MainView {
 		frame.getContentPane().add(textField_1);
 		textField_1.setColumns(10);
 		/////////////////////////
-		taskSelectedFile =  new File("C:\\Users\\taohansamu\\OneDrive\\doan\\tmp\\Nhom5D\\source_code\\test_data\\tasks1.csv");
+		taskSelectedFile =  new File("/home/taohansamu/Documents/DA/Nhom5D/datn/test_data/tasks1.csv");
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		teamSelectedFile =  new File("C:\\Users\\taohansamu\\OneDrive\\doan\\tmp\\Nhom5D\\source_code\\test_data\\resources1.csv");
+		teamSelectedFile =  new File("/home/taohansamu/Documents/DA/Nhom5D/datn/test_data/resources1.csv");
 		//////////////////////////
 		JButton btnSyv = new JButton("Submit");
 		btnSyv.addActionListener(new ActionListener() {
@@ -148,6 +149,10 @@ public class MainView {
 				try {
 					Resources[] resource = reader.readTeam(teamSelectedFile.getAbsolutePath());
 					Tasks[] task = reader.readTask(taskSelectedFile.getAbsolutePath());
+					if(reader.getNumResources() > reader.getNumTasks()){
+						resource = Arrays.copyOfRange(resource, 0, reader.getNumTasks());
+						reader.setNumResources(reader.getNumTasks());
+					}
 					BayesNet net = new BayesNet(resource, reader.getNumResources(), task, reader.getNumTasks(), iterationLength);
 					frame.dispose();
 

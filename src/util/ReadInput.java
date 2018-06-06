@@ -57,8 +57,14 @@ public class ReadInput {
 	public int getNumResources() {
 		return numResources;
 	}
+	public void setNumResources(int value){
+		numResources = value;
+	}
 	
 	public int getNumTasks() {
 		return numTasks;
+	}
+	public void setNumTasks(int value){
+		numTasks = value;
 	}
 }

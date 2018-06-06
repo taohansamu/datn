@@ -65,7 +65,13 @@ public class BayesNet {
 			
 			State task0True = new State("True");
 			State task0False = new State("False");
-			Node task0 = new Node("task0", task0True, task0False);
+			String task0Name;
+			if(numTasks == 1){
+				task0Name = "lastTask";
+			}else{
+				task0Name = "task0";
+			}
+			Node task0 = new Node(task0Name, task0True, task0False);
 			net.getNodes().add(task0);
 			Node riskNode = net.getNodes().get("risk");
 			net.getLinks().add(new Link(riskNode, task0));
@@ -137,7 +143,6 @@ public class BayesNet {
 	        	result[i][j] = queryTaskj.get(stateTrue);
 //	        	System.out.print(result[i][j] + ", ");
 	        }
-	        
 	        Table queryLastTask = new Table(neti.getNodes().get("lastTask"));
 	        State stateTrue = neti.getNodes().get("lastTask").getVariables().get(0).getStates().get("True");
 	        inference.getQueryDistributions().add(queryLastTask);
@@ -229,7 +234,7 @@ public class BayesNet {
 			}
 			table = normalize(table, numState, table.length/numState);
 		} else {
-			if (node.getName().compareTo("task0")==0) {
+			if (node.getName().compareTo("task0")==0 || (node.getName().compareTo("lastTask")==0 && node.getLinksIn().size() == 1)) {
 				size = 4;
 				table = new double[]{0.7, 0.95, 0.3, 0.05};
 			} else if (node.getName().compareTo("risk")==0){

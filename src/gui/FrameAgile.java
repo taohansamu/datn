@@ -56,7 +56,9 @@ public class FrameAgile extends JFrame {
 				for (int j = 0; j < nTasks; j++)
 					if (dataProb[i][j] > 0)
 						nTasksPerRes++;
-				totalProb = totalProb + dataProb[i][nTasksPerRes - 1];
+				if(nTasksPerRes == 0) totalProb = 0.0;
+				else
+					totalProb = totalProb + dataProb[i][nTasksPerRes - 1];
 			} else {
 				totalProb = totalProb/nResources;
 				JPanel panelArea = new JPanel();
