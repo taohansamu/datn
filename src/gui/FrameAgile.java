@@ -3,8 +3,10 @@ package gui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,6 +16,7 @@ import javax.swing.JPanel;
 import com.bayesserver.inference.InconsistentEvidenceException;
 
 import model.BayesNet;
+import util.CSVUtils;
 
 public class FrameAgile extends JFrame {
 	private int width = 1024;
@@ -93,9 +96,48 @@ public class FrameAgile extends JFrame {
 				panelArea.add(reload);
 				this.add(panelArea);
 			}
-			
+			FileWriter csvFileWriter = new FileWriter("output.csv");
+			for(i=0; i< nResources; i++){
+				CSVUtils.writeLine(csvFileWriter, Arrays.asList("R" + Integer.toString(i+1)+":"));
+				ArrayList<String> row = new ArrayList<String>();
+				row.add("\t");
+				for(int j=0; j< dataID[i].length; j++){
+					int tmp = dataID[i][j];
+					if(tmp > 0){
+						row.add("T"+Integer.toString(tmp));
+					}else {
+						CSVUtils.writeLine(csvFileWriter, row);
+						row.clear();
+						break;
+					}
+				}
+				row.add("\t");
+				for(int j=0; j< dataSL[i].length; j++){
+					int tmp = dataSL[i][j];
+					if(tmp > 0){
+						row.add(Integer.toString(tmp)+"h");
+					}else {
+						CSVUtils.writeLine(csvFileWriter, row);
+						row.clear();
+						break;
+					}
+				}
+				row.add("\t");
+				for(int j=0; j< dataProb[i].length; j++){
+					double tmp = dataProb[i][j];
+					if(tmp > 0.0){
+						row.add(Double.toString((double) Math.round(tmp * 1000000) / 10000).toString().replace('.',',')+"%");
+					}else {
+						CSVUtils.writeLine(csvFileWriter, row);
+						row.clear();
+						break;
+					}
+				}
+			}
+			CSVUtils.writeLine(csvFileWriter, Arrays.asList("Xác suất tổng:", Double.toString((double) Math.round(totalProb * 1000000) / 10000).toString().replace('.',',')+"%"));
+			csvFileWriter.flush();
+			csvFileWriter.close();
 		}
-		
 
 		this.setLocationRelativeTo(null);
 		this.setPreferredSize( new Dimension(width, high));
